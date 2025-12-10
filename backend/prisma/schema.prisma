@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Show {
+  id          Int       @id @default(autoincrement())
+  name        String
+  startTime   DateTime
+  totalSeats  Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  seats       Seat[]
+  bookings    Booking[]
+
+  @@map("shows")
+}
+
+enum SeatStatus {
+  AVAILABLE
+  LOCKED
+  BOOKED
+}
+
+model Seat {
+  id          Int           @id @default(autoincrement())
+  showId      Int
+  seatNumber  Int
+  status      SeatStatus    @default(AVAILABLE)
+  show        Show          @relation(fields: [showId], references: [id])
+  bookings    BookingSeat[]
+
+  // Constraint to ensure seat number is unique per show
+  @@unique([showId, seatNumber])
+  @@map("seats")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+}
+
+model Booking {
+  id        Int           @id @default(autoincrement())
+  showId    Int
+  userId    String        // Assuming string based user ID or mock ID
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  show      Show          @relation(fields: [showId], references: [id])
+  seats     BookingSeat[]
+
+  @@map("bookings")
+}
+
+model BookingSeat {
+  id        Int     @id @default(autoincrement())
+  bookingId Int
+  seatId    Int
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  seat      Seat    @relation(fields: [seatId], references: [id])
+
+  @@map("booking_seats")
+}
