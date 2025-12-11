@@ -11,6 +11,15 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 
+// Basic API root route to confirm it is working
+app.get('/api', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'Ticket Booking API is running',
+        timestamp: new Date().toISOString()
+    });
+});
+
 app.use('/api', apiRoutes);
 
 app.get('/', (req, res) => {
