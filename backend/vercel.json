@@ -3,13 +3,7 @@
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/dist/api/index.js"
+            "destination": "/api/index"
         }
-    ],
-    "functions": {
-        "dist/api/index.js": {
-            "memory": 1024,
-            "maxDuration": 10
-        }
-    }
+    ]
 }
