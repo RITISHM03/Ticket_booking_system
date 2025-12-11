@@ -5,7 +5,7 @@ import { z } from 'zod';
 const createShowSchema = z.object({
     name: z.string().min(1),
     startTime: z.coerce.date(),
-    totalSeats: z.number().int().positive(),
+    totalSeats: z.coerce.number().int().positive(),
 });
 
 export const createShow = async (req: Request, res: Response) => {
